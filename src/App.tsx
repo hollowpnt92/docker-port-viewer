@@ -18,7 +18,6 @@ import {
   FormControl,
   InputLabel,
   SelectChangeEvent,
-  Grid,
   Paper,
   IconButton,
   Menu,
@@ -185,8 +184,8 @@ const App: React.FC = () => {
           Docker Port Viewer
         </Typography>
         
-        <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} md={4}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
+          <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 16px)' }, minWidth: 0 }}>
             <TextField
               fullWidth
               label="Hostname"
@@ -194,8 +193,8 @@ const App: React.FC = () => {
               onChange={handleHostnameChange}
               size="small"
             />
-          </Grid>
-          <Grid item xs={12} md={4}>
+          </Box>
+          <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 16px)' }, minWidth: 0 }}>
             <TextField
               fullWidth
               label="Search Containers"
@@ -210,8 +209,8 @@ const App: React.FC = () => {
                 ),
               }}
             />
-          </Grid>
-          <Grid item xs={12} md={4}>
+          </Box>
+          <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 16px)' }, minWidth: 0 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Sort By</InputLabel>
               <Select
@@ -230,8 +229,8 @@ const App: React.FC = () => {
                 <MenuItem value="created-desc">Created (Newest First)</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {error && (
           <Alert severity="error" sx={{ my: 2 }}>
