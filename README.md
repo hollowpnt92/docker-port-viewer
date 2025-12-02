@@ -79,6 +79,50 @@ For cross-platform builds (e.g., building for Linux from macOS):
 docker build --platform linux/amd64 -t docker-port-viewer:latest .
 ```
 
+## CI/CD and Automation
+
+This repository includes automated workflows for dependency updates and Docker image builds.
+
+### Automated Dependency Updates
+
+Dependabot is configured to automatically check for dependency updates weekly (every Monday at 9:00 AM). It will:
+- Create pull requests for npm dependency updates
+- Group production and development dependencies separately
+- Label PRs with `dependencies` and `npm` labels
+
+### Automated Docker Image Builds
+
+GitHub Actions automatically builds and pushes Docker images to Docker Hub on:
+- Pushes to `main` or `master` branch
+- Tagged releases (tags starting with `v`)
+- Manual workflow dispatch
+
+**Setup Instructions:**
+
+1. **Create Docker Hub Access Token:**
+   - Go to [Docker Hub Account Settings](https://hub.docker.com/settings/security)
+   - Click "New Access Token"
+   - Create a token with read/write permissions
+   - Copy the token (you won't see it again!)
+
+2. **Configure GitHub Secrets:**
+   - Go to your GitHub repository settings
+   - Navigate to `Settings` → `Secrets and variables` → `Actions`
+   - Add the following secrets:
+     - `DOCKERHUB_USERNAME`: Your Docker Hub username (`hollowpnt`)
+     - `DOCKERHUB_TOKEN`: The access token you created in step 1
+
+3. **Verify Setup:**
+   - Push a commit to the `main` branch
+   - Check the `Actions` tab in GitHub to see the workflow running
+   - Once complete, verify the image is pushed to Docker Hub
+
+**Image Tags:**
+- `latest` - Latest build from main/master branch
+- `main` or `master` - Branch-specific tags
+- `v1.0.0`, `v1.0`, `v1` - Semantic version tags
+- `main-<sha>` - Commit SHA tags for branch builds
+
 ## Architecture
 
 The application consists of two main components:
