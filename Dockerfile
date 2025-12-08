@@ -1,7 +1,10 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
+
+# Update packages to get latest security patches
+RUN apk update && apk upgrade && apk add --no-cache libc6-compat
 
 # Copy package files
 COPY package*.json ./
@@ -18,6 +21,9 @@ RUN npm run build
 
 # Production stage
 FROM nginx:alpine
+
+# Update packages to get latest security patches (including libpng)
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
