@@ -23,7 +23,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Update packages to get latest security patches (including libpng)
-RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
+RUN apk update && rm -rf /var/cache/apk/*
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
