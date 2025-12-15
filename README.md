@@ -1,4 +1,4 @@
-# Docker Port Viewer 
+# Docker Port Viewer
 
 A modern web application for viewing and interacting with Docker container ports. Built with TypeScript, React, and Material-UI, it provides a user-friendly interface to manage and access your Docker containers.
 
@@ -9,7 +9,7 @@ A modern web application for viewing and interacting with Docker container ports
 - View all running Docker containers and their exposed ports
 - Search containers by name
 - Sort containers by name or creation date
-- View container details including:
+- View container details including
   - Container name
   - Image name
   - Status
