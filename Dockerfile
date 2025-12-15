@@ -3,9 +3,6 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Update packages to get latest security patches
-RUN apk add --no-cache ca-certificates
-
 # Copy package files
 COPY package*.json ./
 
