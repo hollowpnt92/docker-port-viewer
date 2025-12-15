@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Update packages to get latest security patches
-RUN apk update && apk upgrade && apk add --no-cache libc6-compat
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
 
 # Copy package files
 COPY package*.json ./
