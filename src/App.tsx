@@ -56,10 +56,36 @@ const App: React.FC = () => {
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
+  const [nextAvailablePort, setNextAvailablePort] = useState<number | null>(null);
 
   useEffect(() => {
     fetchContainers();
   }, []);
+
+  // Calculate next available port whenever containers change
+  useEffect(() => {
+    const usedPorts = new Set<number>();
+    
+    // Collect all used public ports from all containers
+    containers.forEach((container: DockerContainer) => {
+      container.Ports.forEach((port: Port) => {
+        if (port.PublicPort && port.PublicPort >= 1024 && port.PublicPort <= 49151) {
+          usedPorts.add(port.PublicPort);
+        }
+      });
+    });
+
+    // Find the next available port in range 1024-49151
+    for (let port = 1024; port <= 49151; port++) {
+      if (!usedPorts.has(port)) {
+        setNextAvailablePort(port);
+        return;
+      }
+    }
+    
+    // If no port is available in the range, set to null
+    setNextAvailablePort(null);
+  }, [containers]);
 
   useEffect(() => {
     let filtered = containers;
@@ -180,9 +206,34 @@ const App: React.FC = () => {
   return (
     <Container maxWidth={false} sx={{ py: 2, height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ mb: 2 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Docker Port Viewer
-        </Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: { xs: 1, sm: 0 },
+          mb: 2 
+        }}>
+          <Typography variant="h4" component="h1">
+            Docker Port Viewer
+          </Typography>
+          <TextField
+            label="Next Available Port"
+            value={nextAvailablePort !== null ? nextAvailablePort : 'N/A'}
+            size="small"
+            sx={{ 
+              minWidth: { xs: '100%', sm: 200 },
+              backgroundColor: 'background.paper',
+              '& .MuiOutlinedInput-root': {
+                fontWeight: 'bold',
+                fontSize: '1rem',
+              }
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Box>
         
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 16px)' }, minWidth: 0 }}>
