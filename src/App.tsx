@@ -40,6 +40,16 @@ const MAX_PORT_STORAGE_KEY = 'docker-port-viewer-max-port';
 
 type SortOption = 'name-asc' | 'name-desc' | 'created-asc' | 'created-desc';
 
+const getStoredPortOrDefault = (storageKey: string, defaultValue: number): number => {
+  const stored = localStorage.getItem(storageKey);
+  if (!stored) return defaultValue;
+
+  const value = parseInt(stored, 10);
+  if (!Number.isNaN(value) && value >= 1 && value <= 65535) return value;
+
+  return defaultValue;
+};
+
 const App: React.FC = () => {
   const [containers, setContainers] = useState<DockerContainer[]>([]);
   const [filteredContainers, setFilteredContainers] = useState<DockerContainer[]>([]);
@@ -60,12 +70,10 @@ const App: React.FC = () => {
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [nextAvailablePort, setNextAvailablePort] = useState<number | null>(null);
   const [minPort, setMinPort] = useState<number>(() => {
-    const stored = localStorage.getItem(MIN_PORT_STORAGE_KEY);
-    return stored ? parseInt(stored, 10) : 1024;
+    return getStoredPortOrDefault(MIN_PORT_STORAGE_KEY, 1024);
   });
   const [maxPort, setMaxPort] = useState<number>(() => {
-    const stored = localStorage.getItem(MAX_PORT_STORAGE_KEY);
-    return stored ? parseInt(stored, 10) : 49151;
+    return getStoredPortOrDefault(MAX_PORT_STORAGE_KEY, 49151);
   });
 
   useEffect(() => {
