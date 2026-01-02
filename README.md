@@ -20,7 +20,7 @@ A modern web application for viewing and interacting with Docker container ports
   - Built-in iframe viewer
   - New tab option
 - Customizable hostname for accessing containers
-- **Next Available Port Finder**: Automatically calculates and displays the next available port in a user-defined range (default: 1024-49151)
+- Next Available Port Finder: Automatically calculates and displays the next available port in a user-defined range (default: 1024-49151)
   - Configurable minimum and maximum port range
   - Real-time updates as containers are added or removed
   - Considers all ports currently in use by Docker containers
