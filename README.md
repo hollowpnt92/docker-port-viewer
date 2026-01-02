@@ -20,6 +20,10 @@ A modern web application for viewing and interacting with Docker container ports
   - Built-in iframe viewer
   - New tab option
 - Customizable hostname for accessing containers
+- **Next Available Port Finder**: Automatically calculates and displays the next available port in a user-defined range (default: 1024-49151)
+  - Configurable minimum and maximum port range
+  - Real-time updates as containers are added or removed
+  - Considers all ports currently in use by Docker containers
 - Secure Docker socket proxy integration
 - Responsive Material-UI design
 
@@ -144,6 +148,22 @@ The application can be configured through the following environment variables:
 
 - `PORT`: The port on which the application runs (default: 3003)
 - `DOCKER_SOCKET`: Path to the Docker socket (default: /var/run/docker.sock)
+
+### Next Available Port Feature
+
+The application includes a port finder feature that helps you identify the next available port for new Docker services. This feature:
+
+- **Location**: Displayed in the top-right corner of the interface
+- **Port Range**: Configurable minimum and maximum port values (default range: 1024-49151)
+- **How it works**:
+  1. Scans all running Docker containers to identify used ports
+  2. Searches for the lowest available port within your specified range
+  3. Updates automatically when containers are added, removed, or their ports change
+- **Customization**: 
+  - Adjust the minimum port value (default: 1024)
+  - Adjust the maximum port value (default: 49151)
+  - Settings are saved in browser localStorage and persist across sessions
+- **Use case**: Perfect for quickly finding an available port when setting up new Docker services without manually checking which ports are in use
 
 ## Contributing
 
