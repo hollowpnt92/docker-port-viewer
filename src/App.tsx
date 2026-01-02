@@ -35,8 +35,20 @@ import { Container as DockerContainer, Port } from './types';
 
 const HOSTNAME_STORAGE_KEY = 'docker-port-viewer-hostname';
 const SORT_OPTION_STORAGE_KEY = 'docker-port-viewer-sort-option';
+const MIN_PORT_STORAGE_KEY = 'docker-port-viewer-min-port';
+const MAX_PORT_STORAGE_KEY = 'docker-port-viewer-max-port';
 
 type SortOption = 'name-asc' | 'name-desc' | 'created-asc' | 'created-desc';
+
+const getStoredPortOrDefault = (storageKey: string, defaultValue: number): number => {
+  const stored = localStorage.getItem(storageKey);
+  if (!stored) return defaultValue;
+
+  const value = parseInt(stored, 10);
+  if (!Number.isNaN(value) && value >= 1 && value <= 65535) return value;
+
+  return defaultValue;
+};
 
 const App: React.FC = () => {
   const [containers, setContainers] = useState<DockerContainer[]>([]);
@@ -57,26 +69,38 @@ const App: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [nextAvailablePort, setNextAvailablePort] = useState<number | null>(null);
+  const [minPort, setMinPort] = useState<number>(() => {
+    return getStoredPortOrDefault(MIN_PORT_STORAGE_KEY, 1024);
+  });
+  const [maxPort, setMaxPort] = useState<number>(() => {
+    return getStoredPortOrDefault(MAX_PORT_STORAGE_KEY, 49151);
+  });
 
   useEffect(() => {
     fetchContainers();
   }, []);
 
-  // Calculate next available port whenever containers change
+  // Calculate next available port whenever containers or port range changes
   useEffect(() => {
     const usedPorts = new Set<number>();
     
-    // Collect all used public ports from all containers
+    // Validate port range
+    const validMinPort = Math.max(1, Math.min(65535, minPort));
+    const validMaxPort = Math.max(1, Math.min(65535, maxPort));
+    const actualMinPort = Math.min(validMinPort, validMaxPort);
+    const actualMaxPort = Math.max(validMinPort, validMaxPort);
+    
+    // Collect all used public ports from all containers within the range
     containers.forEach((container: DockerContainer) => {
       container.Ports.forEach((port: Port) => {
-        if (port.PublicPort && port.PublicPort >= 1024 && port.PublicPort <= 49151) {
+        if (port.PublicPort && port.PublicPort >= actualMinPort && port.PublicPort <= actualMaxPort) {
           usedPorts.add(port.PublicPort);
         }
       });
     });
 
-    // Find the next available port in range 1024-49151
-    for (let port = 1024; port <= 49151; port++) {
+    // Find the next available port in the specified range
+    for (let port = actualMinPort; port <= actualMaxPort; port++) {
       if (!usedPorts.has(port)) {
         setNextAvailablePort(port);
         return;
@@ -85,7 +109,7 @@ const App: React.FC = () => {
     
     // If no port is available in the range, set to null
     setNextAvailablePort(null);
-  }, [containers]);
+  }, [containers, minPort, maxPort]);
 
   useEffect(() => {
     let filtered = containers;
@@ -203,6 +227,22 @@ const App: React.FC = () => {
     handleMenuClose();
   };
 
+  const handleMinPortChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 1 && value <= 65535) {
+      setMinPort(value);
+      localStorage.setItem(MIN_PORT_STORAGE_KEY, value.toString());
+    }
+  };
+
+  const handleMaxPortChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 1 && value <= 65535) {
+      setMaxPort(value);
+      localStorage.setItem(MAX_PORT_STORAGE_KEY, value.toString());
+    }
+  };
+
   return (
     <Container maxWidth={false} sx={{ py: 2, height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ mb: 2 }}>
@@ -217,22 +257,61 @@ const App: React.FC = () => {
           <Typography variant="h4" component="h1">
             Docker Port Viewer
           </Typography>
-          <TextField
-            label="Next Available Port"
-            value={nextAvailablePort !== null ? nextAvailablePort : 'N/A'}
-            size="small"
-            sx={{ 
-              minWidth: { xs: '100%', sm: 200 },
-              backgroundColor: 'background.paper',
-              '& .MuiOutlinedInput-root': {
-                fontWeight: 'bold',
-                fontSize: '1rem',
-              }
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 1,
+            flexDirection: { xs: 'column', sm: 'row' },
+            width: { xs: '100%', sm: 'auto' }
+          }}>
+            <TextField
+              label="Min Port"
+              type="number"
+              value={minPort}
+              onChange={handleMinPortChange}
+              size="small"
+              inputProps={{ 
+                min: 1, 
+                max: 65535,
+                step: 1
+              }}
+              sx={{ 
+                width: { xs: '100%', sm: 120 },
+                backgroundColor: 'background.paper',
+              }}
+            />
+            <TextField
+              label="Max Port"
+              type="number"
+              value={maxPort}
+              onChange={handleMaxPortChange}
+              size="small"
+              inputProps={{ 
+                min: 1, 
+                max: 65535,
+                step: 1
+              }}
+              sx={{ 
+                width: { xs: '100%', sm: 120 },
+                backgroundColor: 'background.paper',
+              }}
+            />
+            <TextField
+              label="Next Available Port"
+              value={nextAvailablePort !== null ? nextAvailablePort : 'N/A'}
+              size="small"
+              sx={{ 
+                width: { xs: '100%', sm: 200 },
+                backgroundColor: 'background.paper',
+                '& .MuiOutlinedInput-root': {
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                }
+              }}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Box>
         </Box>
         
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
