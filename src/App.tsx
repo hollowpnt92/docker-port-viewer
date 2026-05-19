@@ -269,10 +269,12 @@ const App: React.FC = () => {
               value={minPort}
               onChange={handleMinPortChange}
               size="small"
-              inputProps={{ 
-                min: 1, 
-                max: 65535,
-                step: 1
+              slotProps={{
+                htmlInput: {
+                  min: 1,
+                  max: 65535,
+                  step: 1,
+                },
               }}
               sx={{ 
                 width: { xs: '100%', sm: 120 },
@@ -285,10 +287,12 @@ const App: React.FC = () => {
               value={maxPort}
               onChange={handleMaxPortChange}
               size="small"
-              inputProps={{ 
-                min: 1, 
-                max: 65535,
-                step: 1
+              slotProps={{
+                htmlInput: {
+                  min: 1,
+                  max: 65535,
+                  step: 1,
+                },
               }}
               sx={{ 
                 width: { xs: '100%', sm: 120 },
@@ -307,8 +311,10 @@ const App: React.FC = () => {
                   fontSize: '1rem',
                 }
               }}
-              InputProps={{
-                readOnly: true,
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
               }}
             />
           </Box>
@@ -331,12 +337,14 @@ const App: React.FC = () => {
               value={searchTerm}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
               size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           </Box>
@@ -381,7 +389,7 @@ const App: React.FC = () => {
           }}
         >
           {loading ? (
-            <Box display="flex" justifyContent="center" my={4}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
               <CircularProgress />
             </Box>
           ) : (
@@ -410,7 +418,7 @@ const App: React.FC = () => {
                         <Typography variant="body2" color="textSecondary">
                           Status: {container.State}
                         </Typography>
-                        <Typography variant="caption" color="textSecondary" display="block">
+                        <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
                           Started: {container.State === 'running' ? new Date(Number(container.Created) * 1000).toLocaleString() : 'Not started'}
                         </Typography>
                         <List dense>

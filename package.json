@@ -18,10 +18,10 @@
     "@mui/material": "^9.0.0",
     "axios": "^1.15.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "typescript": "^6.0.2"
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -33,4 +33,4 @@
     "webpack-cli": "^7.0.0",
     "webpack-dev-server": "^5.2.3"
   }
-} 
+}

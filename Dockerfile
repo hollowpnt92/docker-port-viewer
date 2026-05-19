@@ -6,9 +6,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies including webpack and its dependencies
-RUN npm install && \
-    npm install --save-dev webpack webpack-cli webpack-dev-server typescript ts-loader html-webpack-plugin style-loader css-loader
+# Install dependencies from lockfile (devDependencies include webpack toolchain)
+RUN npm ci
 
 # Copy source code
 COPY . .
