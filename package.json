@@ -14,11 +14,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^7.3.9",
-    "@mui/material": "^7.3.5",
-    "axios": "^1.13.6",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
+    "axios": "^1.15.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "typescript": "^6.0.3",
@@ -33,4 +33,4 @@
     "webpack-cli": "^7.0.2",
     "webpack-dev-server": "^5.2.4"
   }
-} 
+}
