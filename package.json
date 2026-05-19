@@ -18,10 +18,10 @@
     "@mui/material": "^7.3.5",
     "axios": "^1.15.2",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "typescript": "^5.9.3"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
