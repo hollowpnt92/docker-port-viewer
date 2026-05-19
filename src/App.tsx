@@ -156,9 +156,7 @@ const App: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get('/v1.41/containers/json', {
-        socketPath: '/var/run/docker.sock'
-      });
+      const response = await axios.get('/v1.41/containers/json');
       setContainers(response.data);
       setFilteredContainers(response.data);
     } catch (err) {

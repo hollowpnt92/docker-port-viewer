@@ -17,3 +17,5 @@ services:
     container_name: docker-port-viewer
     ports:
       - "3003:80"
+    depends_on:
+      - docker-socket
