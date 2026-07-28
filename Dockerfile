@@ -24,8 +24,10 @@ RUN apk update && rm -rf /var/cache/apk/*
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration template (envsubst at container start)
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+ENV DOCKER_API_UPSTREAM=docker-socket:2375
+ENV NGINX_ENVSUBST_FILTER=DOCKER_API_UPSTREAM
 
 # Expose port 80
 EXPOSE 80

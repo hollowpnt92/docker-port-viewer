@@ -147,7 +147,18 @@ The application uses a Docker socket proxy (`tecnativa/docker-socket-proxy`) to 
 The application can be configured through the following environment variables:
 
 - `PORT`: The port on which the application runs (default: 3003)
-- `DOCKER_SOCKET`: Path to the Docker socket (default: /var/run/docker.sock)
+- `DOCKER_API_UPSTREAM`: Host:port of the Docker socket proxy that nginx forwards API requests to (default: `docker-socket:2375`)
+
+If the socket proxy runs in a separate stack and publishes port `2375`, point the viewer at the host:
+
+```yaml
+environment:
+  - DOCKER_API_UPSTREAM=host.docker.internal:2375
+extra_hosts:
+  - "host.docker.internal:host-gateway"
+```
+
+See `docker-compose.standalone.yml` for a full example.
 
 ### Next Available Port Feature
 

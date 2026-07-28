@@ -1,0 +1,15 @@
+# Use when the socket proxy already runs elsewhere and publishes port 2375.
+# Example socket proxy:
+#   ports: ["2375:2375"]
+#   container_name: docker-socket-proxy
+services:
+  docker-port-viewer:
+    image: hollowpnt/docker-port-viewer:latest
+    container_name: docker-port-viewer
+    restart: unless-stopped
+    ports:
+      - "3003:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - DOCKER_API_UPSTREAM=host.docker.internal:2375

@@ -1,8 +1,9 @@
+# Viewer + socket proxy in the same compose project (recommended).
 services:
-  # Docker socket proxy for security
   docker-socket:
     image: tecnativa/docker-socket-proxy
     container_name: docker-socket-proxy
+    restart: unless-stopped
     environment:
       - CONTAINERS=1
       - POST=0
@@ -11,11 +12,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  # Main application
   docker-port-viewer:
     image: hollowpnt/docker-port-viewer:latest
     container_name: docker-port-viewer
+    restart: unless-stopped
     ports:
       - "3003:80"
     depends_on:
       - docker-socket
+    environment:
+      - DOCKER_API_UPSTREAM=docker-socket:2375

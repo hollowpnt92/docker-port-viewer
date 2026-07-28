@@ -21,3 +21,5 @@ services:
       - "3003:80"
     depends_on:
       - docker-socket
+    environment:
+      - DOCKER_API_UPSTREAM=docker-socket:2375
