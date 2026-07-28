@@ -4,4 +4,3 @@ dist
 .github
 *.md
 docker-compose*.yml
-docker-port-viewer
